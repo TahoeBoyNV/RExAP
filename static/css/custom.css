@@ -1,97 +1,20 @@
 :root {
-    --primary-color: #00a699;
-    --secondary-color: #484848;
-    --background-color: #f7f7f7;
-    --text-color: #484848;
-    --border-color: #e4e4e4;
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --background-color: #f8f9fa;
+    --text-color: #333333;
+    --border-color: #ced4da;
 }
 
 body {
-    font-family: 'Circular', -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
-    line-height: 1.6;
-}
-
-.container {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-    padding: 24px;
-    margin-bottom: 24px;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    color: var(--secondary-color);
-    font-weight: 700;
-}
-
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: #ffffff;
-    font-weight: 600;
-    padding: 12px 24px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-}
-
-.btn-primary:hover {
-    background-color: #008489;
-    border-color: #008489;
-}
-
-.form-control {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 16px;
-}
-
-.form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 1px var(--primary-color);
-}
-
-.form-label {
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--secondary-color);
-}
-
-.progress-bar {
-    height: 8px;
-    background-color: var(--primary-color);
-    border-radius: 4px;
-    margin-bottom: 24px;
-}
-
-.alert {
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 24px;
-}
-
-.alert-success {
-    background-color: #dcf7ec;
-    color: #0f5132;
-    border-color: #baedd8;
 }
 
 .navbar {
     background-color: #ffffff;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
 }
 
 .navbar-brand {
@@ -99,24 +22,80 @@ h6 {
     color: var(--primary-color);
 }
 
-.table {
+.offer-progress {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 250px;
     background-color: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.table th {
+.offer-progress-step {
+    margin-bottom: 20px;
+    position: relative;
+    padding-left: 30px;
+}
+
+.offer-progress-step::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
     background-color: var(--background-color);
+    border: 2px solid var(--border-color);
+}
+
+.offer-progress-step.active::before {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.offer-progress-step.completed::before {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.offer-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
+}
+
+.form-label {
     font-weight: 600;
 }
 
-.table td,
-.table th {
-    padding: 16px;
-    border-bottom: 1px solid var(--border-color);
+.form-control,
+.form-select {
+    border-radius: 0.25rem;
 }
 
-/* Remove bullet points from radio buttons */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
 .form-check-input[type="radio"] {
     margin-left: 0;
 }
@@ -134,7 +113,7 @@ h6 {
     top: 0.25rem;
     width: 1rem;
     height: 1rem;
-    border: 1px solid #ced4da;
+    border: 1px solid var(--border-color);
     border-radius: 50%;
     background-color: #fff;
 }
@@ -148,10 +127,17 @@ h6 {
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background-color: #0d6efd;
+    background-color: var(--primary-color);
 }
 
-/* Adjust spacing for radio button groups */
-.form-check {
-    margin-bottom: 0.5rem;
+@media (max-width: 768px) {
+    .offer-progress {
+        position: static;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .offer-content {
+        margin-left: 0;
+    }
 }
