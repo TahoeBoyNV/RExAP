@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("offer-form");
     const purchasePriceField = document.getElementById("purchase_price");
     const emdValueField = document.getElementById("emd_value");
@@ -19,26 +19,35 @@ document.addEventListener("DOMContentLoaded", function() {
     const amountFinancedField = document.getElementById("amount_financed");
 
     function formatCurrency(value) {
-        value = value.replace(/[^\d]/g, '');
-        value = parseInt(value, 10);
-        return isNaN(value) ? "" : "$" + value.toLocaleString("en-US");
+        value = value.replace(/[^\d.]/g, '');
+        const parts = value.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return "$" + parts.join('.');
+    }
+
+    function parseCurrency(value) {
+        return parseFloat(value.replace(/[^\d.]/g, ''));
     }
 
     function handleCurrencyInput(inputElement) {
-        let cursorPosition = inputElement.selectionStart;
-        let oldLength = inputElement.value.length;
-        inputElement.value = formatCurrency(inputElement.value);
-        let newLength = inputElement.value.length;
-        cursorPosition = cursorPosition - (oldLength - newLength);
-        inputElement.setSelectionRange(cursorPosition, cursorPosition);
+        const cursorPosition = inputElement.selectionStart;
+        const oldLength = inputElement.value.length;
+        const oldValue = inputElement.value;
+        const newValue = formatCurrency(oldValue);
+        inputElement.value = newValue;
+        const newLength = newValue.length;
+        const newPosition = cursorPosition + (newLength - oldLength);
+        inputElement.setSelectionRange(newPosition, newPosition);
     }
 
-    purchasePriceField.addEventListener("input", function(e) {
-        handleCurrencyInput(this);
+    [purchasePriceField, emdValueField, downpaymentField].forEach(field => {
+        field.addEventListener("input", function () {
+            handleCurrencyInput(this);
+        });
     });
 
-    purchasePriceField.addEventListener("blur", function() {
-        let value = parseInt(this.value.replace(/[^\d]/g, ''), 10);
+    purchasePriceField.addEventListener("blur", function () {
+        const value = parseCurrency(this.value);
         if (isNaN(value) || value < 100000) {
             this.classList.add("is-invalid");
             document.getElementById("price-error").textContent = "Purchase price must be greater than $100,000.";
@@ -48,65 +57,77 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    emdValueField.addEventListener("input", function(e) {
-        handleCurrencyInput(this);
-    });
-
-    secondPersonCheckbox.addEventListener("change", function() {
+    secondPersonCheckbox.addEventListener("change", function () {
         secondPersonNameField.style.display = this.checked ? "block" : "none";
     });
 
     offerTypeRadios.forEach(radio => {
-        radio.addEventListener("change", function() {
-            if (this.value === "cash") {
-                cashOfferFields.style.display = "block";
-                financingFields.style.display = "none";
-            } else {
-                cashOfferFields.style.display = "none";
-                financingFields.style.display = "block";
-            }
+        radio.addEventListener("change", function () {
+            cashOfferFields.style.display = this.value === "cash" ? "block" : "none";
+            financingFields.style.display = this.value === "cash" ? "none" : "block";
         });
     });
 
-    emdMethodSelect.addEventListener("change", function() {
+    emdMethodSelect.addEventListener("change", function () {
         emdOtherField.style.display = this.value === "other" ? "block" : "none";
     });
 
-    appraisalContingencyRadios.forEach(radio => {
-        radio.addEventListener("change", function() {
-            appraisalContingencyDays.style.display = this.value === "yes" ? "block" : "none";
-        });
-    });
-
-    financingContingencyRadios.forEach(radio => {
-        radio.addEventListener("change", function() {
-            financingContingencyDays.style.display = this.value === "yes" ? "block" : "none";
-        });
-    });
-
-    inspectionContingencyRadios.forEach(radio => {
-        radio.addEventListener("change", function() {
-            inspectionContingencyFields.style.display = this.value === "yes" ? "block" : "none";
+    [appraisalContingencyRadios, financingContingencyRadios, inspectionContingencyRadios].forEach((radios, index) => {
+        const contingencyFields = [appraisalContingencyDays, financingContingencyDays, inspectionContingencyFields];
+        radios.forEach(radio => {
+            radio.addEventListener("change", function () {
+                contingencyFields[index].style.display = this.value === "yes" ? "block" : "none";
+            });
         });
     });
 
     function calculateAmountFinanced() {
-        const purchasePrice = parseInt(purchasePriceField.value.replace(/[^\d]/g, ''), 10);
-        const downpayment = parseInt(downpaymentField.value.replace(/[^\d]/g, ''), 10);
+        const purchasePrice = parseCurrency(purchasePriceField.value);
+        const downpayment = parseCurrency(downpaymentField.value);
         if (!isNaN(purchasePrice) && !isNaN(downpayment)) {
             const amountFinanced = purchasePrice - downpayment;
-            amountFinancedField.value = formatCurrency(amountFinanced.toString());
+            amountFinancedField.value = formatCurrency(amountFinanced.toFixed(2));
         }
     }
 
-    purchasePriceField.addEventListener("input", calculateAmountFinanced);
-    downpaymentField.addEventListener("input", function() {
-        handleCurrencyInput(this);
-        calculateAmountFinanced();
+    [purchasePriceField, downpaymentField].forEach(field => {
+        field.addEventListener("input", calculateAmountFinanced);
     });
 
-    form.addEventListener("submit", function(event) {
-        // Add any final form validation here if needed
-        // If validation fails, call event.preventDefault() to stop form submission
+    form.addEventListener("submit", function (event) {
+        let isValid = true;
+
+        // Validate purchase price
+        const purchasePrice = parseCurrency(purchasePriceField.value);
+        if (isNaN(purchasePrice) || purchasePrice < 100000) {
+            purchasePriceField.classList.add("is-invalid");
+            document.getElementById("price-error").textContent = "Purchase price must be greater than $100,000.";
+            isValid = false;
+        }
+
+        // Validate second person name if checkbox is checked
+        if (secondPersonCheckbox.checked && !secondPersonNameField.value.trim()) {
+            secondPersonNameField.classList.add("is-invalid");
+            isValid = false;
+        }
+
+        // Validate EMD value
+        const emdValue = parseCurrency(emdValueField.value);
+        if (isNaN(emdValue) || emdValue <= 0) {
+            emdValueField.classList.add("is-invalid");
+            document.getElementById("emd-value-error").textContent = "Please enter a valid EMD value.";
+            isValid = false;
+        }
+
+        // Add more validations as needed...
+
+        if (!isValid) {
+            event.preventDefault();
+            // Scroll to the first invalid field
+            const firstInvalidField = form.querySelector(".is-invalid");
+            if (firstInvalidField) {
+                firstInvalidField.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
     });
 });
