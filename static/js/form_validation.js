@@ -22,33 +22,49 @@ document.addEventListener("DOMContentLoaded", function () {
         value = value.replace(/[^\d.]/g, '');
         const parts = value.split('.');
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        return "$" + parts.join('.');
+        return "$" + (parts[0] ? parts[0] : "0") + (parts.length > 1 ? "." + parts[1].slice(0, 2) : "");
     }
 
     function parseCurrency(value) {
-        return parseFloat(value.replace(/[^\d.]/g, ''));
+        return parseFloat(value.replace(/[^\d.]/g, '')) || 0;
     }
 
     function handleCurrencyInput(inputElement) {
         const cursorPosition = inputElement.selectionStart;
-        const oldLength = inputElement.value.length;
         const oldValue = inputElement.value;
-        const newValue = formatCurrency(oldValue);
+        let newValue = oldValue.replace(/[^\d.]/g, '');
+
+        // Ensure only one decimal point
+        const parts = newValue.split('.');
+        if (parts.length > 2) {
+            parts.pop();
+            newValue = parts.join('.');
+        }
+
+        // Format the value
+        newValue = formatCurrency(newValue);
+
+        // Update the input value and cursor position
         inputElement.value = newValue;
-        const newLength = newValue.length;
-        const newPosition = cursorPosition + (newLength - oldLength);
-        inputElement.setSelectionRange(newPosition, newPosition);
+        const newCursorPosition = cursorPosition + (newValue.length - oldValue.length);
+        inputElement.setSelectionRange(newCursorPosition, newCursorPosition);
     }
 
     [purchasePriceField, emdValueField, downpaymentField].forEach(field => {
-        field.addEventListener("input", function () {
-            handleCurrencyInput(this);
-        });
+        if (field) {
+            field.addEventListener("input", function () {
+                handleCurrencyInput(this);
+            });
+            field.addEventListener("blur", function () {
+                const value = parseCurrency(this.value);
+                this.value = formatCurrency(value.toFixed(2));
+            });
+        }
     });
 
     purchasePriceField.addEventListener("blur", function () {
         const value = parseCurrency(this.value);
-        if (isNaN(value) || value < 100000) {
+        if (value < 100000) {
             this.classList.add("is-invalid");
             document.getElementById("price-error").textContent = "Purchase price must be greater than $100,000.";
         } else {
@@ -84,14 +100,14 @@ document.addEventListener("DOMContentLoaded", function () {
     function calculateAmountFinanced() {
         const purchasePrice = parseCurrency(purchasePriceField.value);
         const downpayment = parseCurrency(downpaymentField.value);
-        if (!isNaN(purchasePrice) && !isNaN(downpayment)) {
-            const amountFinanced = purchasePrice - downpayment;
-            amountFinancedField.value = formatCurrency(amountFinanced.toFixed(2));
-        }
+        const amountFinanced = Math.max(0, purchasePrice - downpayment);
+        amountFinancedField.value = formatCurrency(amountFinanced.toFixed(2));
     }
 
     [purchasePriceField, downpaymentField].forEach(field => {
-        field.addEventListener("input", calculateAmountFinanced);
+        if (field) {
+            field.addEventListener("input", calculateAmountFinanced);
+        }
     });
 
     form.addEventListener("submit", function (event) {
@@ -99,24 +115,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Validate purchase price
         const purchasePrice = parseCurrency(purchasePriceField.value);
-        if (isNaN(purchasePrice) || purchasePrice < 100000) {
+        if (purchasePrice < 100000) {
             purchasePriceField.classList.add("is-invalid");
             document.getElementById("price-error").textContent = "Purchase price must be greater than $100,000.";
             isValid = false;
+        } else {
+            purchasePriceField.classList.remove("is-invalid");
+            document.getElementById("price-error").textContent = "";
         }
 
         // Validate second person name if checkbox is checked
         if (secondPersonCheckbox.checked && !secondPersonNameField.value.trim()) {
             secondPersonNameField.classList.add("is-invalid");
             isValid = false;
+        } else {
+            secondPersonNameField.classList.remove("is-invalid");
         }
 
         // Validate EMD value
         const emdValue = parseCurrency(emdValueField.value);
-        if (isNaN(emdValue) || emdValue <= 0) {
+        if (emdValue <= 0) {
             emdValueField.classList.add("is-invalid");
             document.getElementById("emd-value-error").textContent = "Please enter a valid EMD value.";
             isValid = false;
+        } else {
+            emdValueField.classList.remove("is-invalid");
+            document.getElementById("emd-value-error").textContent = "";
         }
 
         // Add more validations as needed...
