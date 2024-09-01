@@ -1,4 +1,4 @@
-from extensions import db
+from app import db
 from datetime import datetime
 
 class Inspection(db.Model):
@@ -6,6 +6,9 @@ class Inspection(db.Model):
     offer_id = db.Column(db.Integer, db.ForeignKey('offer.id'), nullable=False)
     type = db.Column(db.String(100), nullable=False)
     paid_by = db.Column(db.String(20), nullable=False)
+
+    def __repr__(self):
+        return f"Inspection(type='{self.type}', paid_by='{self.paid_by}')"
 
 class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -9,9 +9,10 @@ import os
 
 @app.route('/', methods=['GET', 'POST'])
 def intake_form():
-    try:
-        form = OfferForm()
-        if form.validate_on_submit():
+    form = OfferForm()
+    if form.validate_on_submit():
+        try:
+            # Create new offer object
             new_offer = Offer(
                 full_name=form.full_name.data,
                 second_person=form.second_person.data,
@@ -39,6 +40,7 @@ def intake_form():
             )
             db.session.add(new_offer)
             
+            # Add inspections if applicable
             if form.inspection_contingency.data == 'yes':
                 for inspection_form in form.inspections:
                     new_inspection = Inspection(
@@ -49,49 +51,48 @@ def intake_form():
                     db.session.add(new_inspection)
             
             db.session.commit()
-            
             flash('Your offer has been submitted successfully!', 'success')
             return redirect(url_for('review', offer_id=new_offer.id))
-        return render_template('intake_form.html', form=form)
-    except Exception as e:
-        app.logger.error(f"Error in intake_form: {str(e)}")
-        return f"An error occurred: {str(e)}", 500
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error in intake_form: {str(e)}")
+            flash('An error occurred while submitting your offer. Please try again.', 'danger')
+    
+    return render_template('intake_form.html', form=form)
 
 @app.route('/review/<int:offer_id>', methods=['GET', 'POST'])
 def review(offer_id):
-    try:
-        offer = Offer.query.get_or_404(offer_id)
-        if request.method == 'POST':
+    offer = Offer.query.get_or_404(offer_id)
+    if request.method == 'POST':
+        try:
             pdf_file = generate_pdf(offer)
             send_email(offer.full_name, pdf_file)
             return redirect(url_for('payment', offer_id=offer.id))
-        return render_template('review.html', offer=offer)
-    except Exception as e:
-        app.logger.error(f"Error in review: {str(e)}")
-        return f"An error occurred: {str(e)}", 500
+        except Exception as e:
+            app.logger.error(f"Error in review: {str(e)}")
+            flash('An error occurred while processing your offer. Please try again.', 'danger')
+    
+    return render_template('review.html', offer=offer)
 
 @app.route('/payment/<int:offer_id>', methods=['GET', 'POST'])
 def payment(offer_id):
-    try:
-        offer = Offer.query.get_or_404(offer_id)
-        if request.method == 'POST':
-            # Handle Stripe payment
+    offer = Offer.query.get_or_404(offer_id)
+    if request.method == 'POST':
+        try:
+            # TODO: Implement Stripe payment processing here
             # Update offer status after successful payment
             flash('Payment successful!', 'success')
             return redirect(url_for('confirmation', offer_id=offer.id))
-        return render_template('payment.html', offer=offer)
-    except Exception as e:
-        app.logger.error(f"Error in payment: {str(e)}")
-        return f"An error occurred: {str(e)}", 500
+        except Exception as e:
+            app.logger.error(f"Error in payment: {str(e)}")
+            flash('An error occurred during payment. Please try again.', 'danger')
+    
+    return render_template('payment.html', offer=offer)
 
 @app.route('/confirmation/<int:offer_id>')
 def confirmation(offer_id):
-    try:
-        offer = Offer.query.get_or_404(offer_id)
-        return render_template('confirmation.html', offer=offer)
-    except Exception as e:
-        app.logger.error(f"Error in confirmation: {str(e)}")
-        return f"An error occurred: {str(e)}", 500
+    offer = Offer.query.get_or_404(offer_id)
+    return render_template('confirmation.html', offer=offer)
 
 def generate_pdf(offer):
     pdf_file = f"offer_{offer.id}.pdf"
@@ -99,7 +100,7 @@ def generate_pdf(offer):
     c.drawString(100, 750, f"Offer for: {offer.property_address}")
     c.drawString(100, 730, f"Buyer: {offer.full_name}")
     c.drawString(100, 710, f"Purchase Price: ${offer.purchase_price:,.2f}")
-    # Add more offer details...
+    # TODO: Add more offer details to the PDF
     c.save()
     return pdf_file
 
@@ -116,7 +117,6 @@ def send_email(to_name, pdf_file):
         app.logger.error(f"Error sending email: {str(e)}")
         raise
 
-# Error handlers
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html'), 404

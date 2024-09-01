@@ -14,7 +14,8 @@ sslify = SSLify(app)
 
 # Configuration
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback_secret_key')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///site.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '').replace('postgres://', 'postgresql://') or \
+                                        'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.your_email_provider.com')
 app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
@@ -28,8 +29,16 @@ migrate = Migrate(app, db)
 mail = Mail(app)
 stripe.api_key = os.environ.get('STRIPE_API_KEY', 'your_stripe_api_key')
 
+# Import models
+from models import Offer
+
 # Import routes
 from routes import *
+
+# Create database tables
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 if __name__ == '__main__':
     app.run(debug=True)
