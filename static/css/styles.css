@@ -1,0 +1,70 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #dbd2c8; /* Neutral background */
+    color: #545621; /* Army Green for text */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff; /* White background for cards */
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #279df0; /* Primary blue accent for headings */
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #545621; /* Dark gray for form labels */
+    margin-bottom: 5px;
+}
+
+.form-control {
+    background-color: #ffffff; /* White background for inputs */
+    color: #545621;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.form-control:focus {
+    background-color: #ffffff;
+    border-color: #279df0; /* Soft blue border on focus */
+    box-shadow: 0 0 5px rgba(39, 157, 240, 0.3);
+}
+
+.btn-primary {
+    background-color: #279df0; /* Primary blue for buttons */
+    border-color: #279df0;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 20px;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #217ac9; /* Darker blue on hover */
+}
+
+.invalid-feedback {
+    color: #e74c3c; /* Red for error messages */
+    font-size: 0.875rem;
+}
+
+.is-invalid {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
+}

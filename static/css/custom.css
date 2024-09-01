@@ -1,0 +1,157 @@
+:root {
+    --primary-color: #00a699;
+    --secondary-color: #484848;
+    --background-color: #f7f7f7;
+    --text-color: #484848;
+    --border-color: #e4e4e4;
+}
+
+body {
+    font-family: 'Circular', -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--secondary-color);
+    font-weight: 700;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #008489;
+    border-color: #008489;
+}
+
+.form-control {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--secondary-color);
+}
+
+.progress-bar {
+    height: 8px;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    margin-bottom: 24px;
+}
+
+.alert {
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.alert-success {
+    background-color: #dcf7ec;
+    color: #0f5132;
+    border-color: #baedd8;
+}
+
+.navbar {
+    background-color: #ffffff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.table {
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: var(--background-color);
+    font-weight: 600;
+}
+
+.table td,
+.table th {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Remove bullet points from radio buttons */
+.form-check-input[type="radio"] {
+    margin-left: 0;
+}
+
+.form-check-label {
+    margin-left: 1.5rem;
+    position: relative;
+}
+
+.form-check-input[type="radio"]+.form-check-label::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: -1.5rem;
+    top: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 50%;
+    background-color: #fff;
+}
+
+.form-check-input[type="radio"]:checked+.form-check-label::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: -1.25rem;
+    top: 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: #0d6efd;
+}
+
+/* Adjust spacing for radio button groups */
+.form-check {
+    margin-bottom: 0.5rem;
+}
