@@ -141,7 +141,7 @@
 
                 <div class="mb-4">
                     {{ form.financing_contingency.label(class="form-label") }}
-                    {{ form.financing_contingency(class="form-check") }}
+                    {% for subfield in form.financing_contingency %}
                     <div class="form-check">
                         {{ subfield(class="form-check-input") }}
                         {{ subfield.label(class="form-check-label") }}
@@ -156,7 +156,7 @@
 
                 <div class="mb-4">
                     {{ form.inspection_contingency.label(class="form-label") }}
-                    {{ form.inspection_contingency(class="form-check") }}
+                    {% for subfield in form.inspection_contingency %}
                     <div class="form-check">
                         {{ subfield(class="form-check-input") }}
                         {{ subfield.label(class="form-check-label") }}
