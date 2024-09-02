@@ -7,6 +7,9 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import os
 
+def parse_currency(value):
+    return float(value.replace('$', '').replace(',', '')) if value else 0
+
 @app.route('/', methods=['GET', 'POST'])
 def intake_form():
     form = OfferForm()
@@ -17,19 +20,19 @@ def intake_form():
                 full_name=form.full_name.data,
                 second_person=form.second_person.data,
                 second_person_name=form.second_person_name.data,
-                purchase_price=form.purchase_price.data,
+                purchase_price=parse_currency(form.purchase_price.data),
                 property_address=form.property_address.data,
                 primary_residence=form.primary_residence.data == 'yes',
                 offer_type=form.offer_type.data,
                 days_until_cash_available=form.days_until_cash_available.data,
                 financing_type=form.financing_type.data,
                 max_interest_rate=form.max_interest_rate.data,
-                downpayment=form.downpayment.data,
-                amount_financed=form.amount_financed.data,
+                downpayment=parse_currency(form.downpayment.data),
+                amount_financed=parse_currency(form.amount_financed.data),
                 days_to_submit_financing_app=form.days_to_submit_financing_app.data,
                 emd_method=form.emd_method.data,
                 emd_other=form.emd_other.data,
-                emd_value=form.emd_value.data,
+                emd_value=parse_currency(form.emd_value.data),
                 emd_days=form.emd_days.data,
                 appraisal_contingency=form.appraisal_contingency.data == 'yes',
                 appraisal_contingency_days=form.appraisal_contingency_days.data,

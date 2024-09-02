@@ -10,7 +10,7 @@ class OfferForm(FlaskForm):
     full_name = StringField('Enter your full name', validators=[DataRequired()])
     second_person = BooleanField('Are you submitting this offer with a second person?')
     second_person_name = StringField('Enter the second person\'s name', validators=[Optional()])
-    purchase_price = StringField('Purchase Price', validators=[DataRequired()], render_kw={"type": "text", "inputmode": "numeric", "pattern": "[0-9]*"})
+    purchase_price = StringField('Purchase Price', validators=[DataRequired()], render_kw={"type": "text", "inputmode": "decimal"})
     property_address = StringField('Address', validators=[DataRequired()])
     
     primary_residence = RadioField('Will this be your primary residence?', 
@@ -33,15 +33,15 @@ class OfferForm(FlaskForm):
                                           ('private', 'Private')], 
                                  validators=[Optional()])
     max_interest_rate = DecimalField('Max Interest Rate Approved For', validators=[Optional()])
-    downpayment = DecimalField('Down Payment Amount ($)', validators=[Optional()])
-    amount_financed = DecimalField('Amount Financed', render_kw={'readonly': True})
+    downpayment = StringField('Down Payment Amount ($)', validators=[Optional()], render_kw={"type": "text", "inputmode": "decimal"})
+    amount_financed = StringField('Amount Financed', render_kw={'readonly': True})
     days_to_submit_financing_app = IntegerField('Days to submit financing application', validators=[Optional()])
 
     emd_method = SelectField('How do you plan to send the earnest money deposit?', 
                              choices=[('check', 'Check'), ('wire_transfer', 'Wire Transfer'), ('other', 'Other')], 
                              validators=[DataRequired()])
     emd_other = StringField('Please specify', validators=[Optional()])
-    emd_value = DecimalField('Earnest Money Deposit Value', validators=[Optional()])
+    emd_value = StringField('Earnest Money Deposit Value', validators=[Optional()], render_kw={"type": "text", "inputmode": "decimal"})
     emd_days = IntegerField('Days to submit EMD', validators=[DataRequired()])
 
     appraisal_contingency = RadioField('Do you want an appraisal contingency?', 

@@ -61,7 +61,8 @@
 
                         <div class="mb-4">
                             {{ form.purchase_price.label(class="form-label") }}
-                            {{ form.purchase_price(class="form-control", id="purchase_price") }}
+                            {{ form.purchase_price(class="form-control", id="purchase_price", type="text",
+                            inputmode="decimal") }}
                             <div class="invalid-feedback" id="price-error"></div>
                         </div>
 
@@ -108,7 +109,8 @@
                             </div>
                             <div class="mb-4">
                                 {{ form.downpayment.label(class="form-label") }}
-                                {{ form.downpayment(class="form-control", id="downpayment", inputmode="decimal") }}
+                                {{ form.downpayment(class="form-control", id="downpayment", type="text",
+                                inputmode="decimal") }}
                             </div>
                             <div class="mb-4">
                                 {{ form.amount_financed.label(class="form-label") }}

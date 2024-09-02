@@ -18,8 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const downpaymentField = document.getElementById("downpayment");
     const amountFinancedField = document.getElementById("amount_financed");
 
-    console.log("Downpayment field:", downpaymentField); // Debugging
-
     function formatCurrency(value) {
         value = value.replace(/[^\d.]/g, '');
         const parts = value.split('.');
@@ -32,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function handleCurrencyInput(inputElement) {
-        console.log("Handling currency input for", inputElement.id); // Debugging
         const cursorPosition = inputElement.selectionStart;
         const oldValue = inputElement.value;
         let newValue = oldValue.replace(/[^\d.]/g, '');
@@ -56,16 +53,15 @@ document.addEventListener("DOMContentLoaded", function () {
     [purchasePriceField, emdValueField, downpaymentField].forEach(field => {
         if (field) {
             field.addEventListener("input", function () {
-                console.log(`Input event fired for ${this.id}`); // Debugging
                 handleCurrencyInput(this);
+                if (this.id === 'purchase_price' || this.id === 'downpayment') {
+                    calculateAmountFinanced();
+                }
             });
             field.addEventListener("blur", function () {
-                console.log(`Blur event fired for ${this.id}`); // Debugging
                 const value = parseCurrency(this.value);
                 this.value = formatCurrency(value.toFixed(2));
             });
-        } else {
-            console.error(`Field not found: ${field}`); // Debugging
         }
     });
 
@@ -111,21 +107,15 @@ document.addEventListener("DOMContentLoaded", function () {
         amountFinancedField.value = formatCurrency(amountFinanced.toFixed(2));
     }
 
-    [purchasePriceField, downpaymentField].forEach(field => {
-        if (field) {
-            field.addEventListener("input", calculateAmountFinanced);
-        }
-    });
-
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent form submission for debugging
+        event.preventDefault();
         console.log("Form submission attempted");
 
         let isValid = true;
 
         // Validate purchase price
         const purchasePrice = parseCurrency(purchasePriceField.value);
-        console.log("Purchase price:", purchasePrice); // Debugging
+        console.log("Purchase price:", purchasePrice);
         if (purchasePrice < 100000) {
             purchasePriceField.classList.add("is-invalid");
             document.getElementById("price-error").textContent = "Purchase price must be greater than $100,000.";
@@ -156,12 +146,9 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("emd-value-error").textContent = "";
         }
 
-        // Add more validations as needed...
-
         if (isValid) {
-            console.log("Form is valid, would submit normally");
-            // Uncomment the next line to allow form submission when everything is working
-            // form.submit();
+            console.log("Form is valid, submitting");
+            form.submit();
         } else {
             console.log("Form is invalid");
             const firstInvalidField = form.querySelector(".is-invalid");
