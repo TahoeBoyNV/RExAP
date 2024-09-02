@@ -55,27 +55,13 @@ def intake_form():
             
             db.session.commit()
             flash('Your offer has been submitted successfully!', 'success')
-            return redirect(url_for('review', offer_id=new_offer.id))
+            return redirect(url_for('payment', offer_id=new_offer.id))
         except Exception as e:
             db.session.rollback()
             app.logger.error(f"Error in intake_form: {str(e)}")
             flash('An error occurred while submitting your offer. Please try again.', 'danger')
     
     return render_template('intake_form.html', form=form)
-
-@app.route('/review/<int:offer_id>', methods=['GET', 'POST'])
-def review(offer_id):
-    offer = Offer.query.get_or_404(offer_id)
-    if request.method == 'POST':
-        try:
-            pdf_file = generate_pdf(offer)
-            send_email(offer.full_name, pdf_file)
-            return redirect(url_for('payment', offer_id=offer.id))
-        except Exception as e:
-            app.logger.error(f"Error in review: {str(e)}")
-            flash('An error occurred while processing your offer. Please try again.', 'danger')
-    
-    return render_template('review.html', offer=offer)
 
 @app.route('/payment/<int:offer_id>', methods=['GET', 'POST'])
 def payment(offer_id):
@@ -85,12 +71,26 @@ def payment(offer_id):
             # TODO: Implement Stripe payment processing here
             # Update offer status after successful payment
             flash('Payment successful!', 'success')
-            return redirect(url_for('confirmation', offer_id=offer.id))
+            return redirect(url_for('review', offer_id=offer.id))
         except Exception as e:
             app.logger.error(f"Error in payment: {str(e)}")
             flash('An error occurred during payment. Please try again.', 'danger')
     
     return render_template('payment.html', offer=offer)
+
+@app.route('/review/<int:offer_id>', methods=['GET', 'POST'])
+def review(offer_id):
+    offer = Offer.query.get_or_404(offer_id)
+    if request.method == 'POST':
+        try:
+            pdf_file = generate_pdf(offer)
+            send_email(offer.full_name, pdf_file)
+            return redirect(url_for('confirmation', offer_id=offer.id))
+        except Exception as e:
+            app.logger.error(f"Error in review: {str(e)}")
+            flash('An error occurred while processing your offer. Please try again.', 'danger')
+    
+    return render_template('review.html', offer=offer)
 
 @app.route('/confirmation/<int:offer_id>')
 def confirmation(offer_id):
