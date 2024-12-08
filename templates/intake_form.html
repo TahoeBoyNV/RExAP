@@ -18,221 +18,235 @@
         </div>
     </nav>
 
-    <div class="offer-progress">
-        <h5 class="mb-4">Your Progress</h5>
-        <div class="offer-progress-step active">
-            <h6>Offer Details</h6>
-            <small>Enter property and offer information</small>
+    <div class="container">
+        <div class="offer-progress">
+            <div class="offer-progress-step active">
+                <span>1</span>
+                <h6>Offer Details</h6>
+                <small>Enter property and offer information</small>
+            </div>
+            <div class="offer-progress-step">
+                <span>2</span>
+                <h6>Payment Details</h6>
+                <small>Provide payment information</small>
+            </div>
+            <div class="offer-progress-step">
+                <span>3</span>
+                <h6>Review Offer</h6>
+                <small>Review and submit your offer</small>
+            </div>
         </div>
-        <div class="offer-progress-step">
-            <h6>Payment Details</h6>
-            <small>Provide payment information</small>
-        </div>
-        <div class="offer-progress-step">
-            <h6>Review Offer</h6>
-            <small>Review and submit your offer</small>
-        </div>
-    </div>
 
-    <div class="offer-content">
-        <div class="container">
-            <h1 class="mb-4">Submit Your Offer</h1>
-            <div class="card">
-                <div class="card-body">
-                    <form id="offer-form" method="POST" action="{{ url_for('intake_form') }}">
-                        {{ form.hidden_tag() }}
 
-                        <div class="mb-4">
-                            {{ form.full_name.label(class="form-label", for="full_name") }}
-                            {{ form.full_name(class="form-control", id="full_name") }}
-                        </div>
+        <div class="offer-content">
+            <div class="container">
+                <h1 class="mb-4">Submit Your Offer</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <form id="offer-form" method="POST" action="{{ url_for('intake_form') }}">
+                            {{ form.hidden_tag() }}
 
-                        <div class="form-check mb-4">
-                            {{ form.second_person(class="form-check-input", id="secondPersonCheckbox") }}
-                            <label class="form-check-label" for="secondPersonCheckbox">
-                                {{ form.second_person.label.text }}
-                            </label>
-                        </div>
-
-                        <div class="mb-4" id="secondPersonNameField" style="display: none;">
-                            {{ form.second_person_name.label(class="form-label", for="second_person_name") }}
-                            {{ form.second_person_name(class="form-control", id="second_person_name") }}
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form.purchase_price.label(class="form-label", for="purchase_price") }}
-                            {{ form.purchase_price(class="form-control", id="purchase_price", type="text",
-                            inputmode="decimal") }}
-                            <div class="invalid-feedback" id="price-error"></div>
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form.property_address.label(class="form-label", for="autocomplete") }}
-                            {{ form.property_address(class="form-control", id="autocomplete") }}
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form.primary_residence.label(class="form-label") }}
-                            {% for subfield in form.primary_residence %}
-                            <div class="form-check">
-                                {{ subfield(class="form-check-input", id="primary_residence_" + subfield.data) }}
-                                {{ subfield.label(class="form-check-label", for="primary_residence_" + subfield.data) }}
-                            </div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form.offer_type.label(class="form-label") }}
-                            {% for subfield in form.offer_type %}
-                            <div class="form-check">
-                                {{ subfield(class="form-check-input", id="offer_type_" + subfield.data) }}
-                                {{ subfield.label(class="form-check-label", for="offer_type_" + subfield.data) }}
-                            </div>
-                            {% endfor %}
-                        </div>
-
-                        <div id="cashOfferFields" style="display: none;">
                             <div class="mb-4">
-                                {{ form.days_until_cash_available.label(class="form-label",
-                                for="days_until_cash_available") }}
-                                {{ form.days_until_cash_available(class="form-control", id="days_until_cash_available")
-                                }}
+                                {{ form.full_name.label(class="form-label", for="full_name") }}
+                                {{ form.full_name(class="form-control", id="full_name") }}
                             </div>
-                        </div>
 
-                        <div id="financingFields" style="display: none;">
-                            <div class="mb-4">
-                                {{ form.financing_type.label(class="form-label", for="financing_type") }}
-                                {{ form.financing_type(class="form-select", id="financing_type") }}
+                            <div class="form-check mb-4">
+                                {{ form.second_person(class="form-check-input", id="secondPersonCheckbox") }}
+                                <label class="form-check-label" for="secondPersonCheckbox">
+                                    {{ form.second_person.label.text }}
+                                </label>
                             </div>
-                            <div class="mb-4">
-                                {{ form.max_interest_rate.label(class="form-label", for="max_interest_rate") }}
-                                {{ form.max_interest_rate(class="form-control", id="max_interest_rate") }}
+
+                            <div class="mb-4" id="secondPersonNameField" style="display: none;">
+                                {{ form.second_person_name.label(class="form-label", for="second_person_name") }}
+                                {{ form.second_person_name(class="form-control", id="second_person_name") }}
                             </div>
+
                             <div class="mb-4">
-                                {{ form.downpayment.label(class="form-label", for="downpayment") }}
-                                {{ form.downpayment(class="form-control", id="downpayment", type="text",
+                                {{ form.purchase_price.label(class="form-label", for="purchase_price") }}
+                                {{ form.purchase_price(class="form-control", id="purchase_price", type="text",
                                 inputmode="decimal") }}
+                                <div class="invalid-feedback" id="price-error"></div>
                             </div>
+
                             <div class="mb-4">
-                                {{ form.amount_financed.label(class="form-label", for="amount_financed") }}
-                                {{ form.amount_financed(class="form-control", readonly=True, id="amount_financed") }}
+                                {{ form.property_address.label(class="form-label", for="autocomplete") }}
+                                {{ form.property_address(class="form-control", id="autocomplete") }}
                             </div>
+
                             <div class="mb-4">
-                                {{ form.days_to_submit_financing_app.label(class="form-label",
-                                for="days_to_submit_financing_app") }}
-                                {{ form.days_to_submit_financing_app(class="form-control",
-                                id="days_to_submit_financing_app") }}
+                                {{ form.primary_residence.label(class="form-label") }}
+                                {% for subfield in form.primary_residence %}
+                                <div class="form-check">
+                                    {{ subfield(class="form-check-input", id="primary_residence_" + subfield.data) }}
+                                    {{ subfield.label(class="form-check-label", for="primary_residence_" +
+                                    subfield.data) }}
+                                </div>
+                                {% endfor %}
                             </div>
-                        </div>
 
-                        <div class="mb-4">
-                            {{ form.emd_method.label(class="form-label", for="emdMethodSelect") }}
-                            {{ form.emd_method(class="form-select", id="emdMethodSelect") }}
-                        </div>
-
-                        <div class="mb-4" id="emdOtherField" style="display: none;">
-                            {{ form.emd_other.label(class="form-label", for="emd_other") }}
-                            {{ form.emd_other(class="form-control", id="emd_other") }}
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form.emd_value.label(class="form-label", for="emd_value") }}
-                            {{ form.emd_value(class="form-control", id="emd_value", type="text", inputmode="decimal") }}
-                            <div class="invalid-feedback" id="emd-value-error"></div>
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form.emd_days.label(class="form-label", for="emd_days") }}
-                            {{ form.emd_days(class="form-control", id="emd_days") }}
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form.appraisal_contingency.label(class="form-label") }}
-                            {% for subfield in form.appraisal_contingency %}
-                            <div class="form-check">
-                                {{ subfield(class="form-check-input", id="appraisal_contingency_" + subfield.data) }}
-                                {{ subfield.label(class="form-check-label", for="appraisal_contingency_" +
-                                subfield.data) }}
-                            </div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="mb-4" id="appraisalContingencyDays" style="display: none;">
-                            {{ form.appraisal_contingency_days.label(class="form-label",
-                            for="appraisal_contingency_days") }}
-                            {{ form.appraisal_contingency_days(class="form-control", id="appraisal_contingency_days") }}
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form.financing_contingency.label(class="form-label") }}
-                            {% for subfield in form.financing_contingency %}
-                            <div class="form-check">
-                                {{ subfield(class="form-check-input", id="financing_contingency_" + subfield.data) }}
-                                {{ subfield.label(class="form-check-label", for="financing_contingency_" +
-                                subfield.data) }}
-                            </div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="mb-4" id="financingContingencyDays" style="display: none;">
-                            {{ form.financing_contingency_days.label(class="form-label",
-                            for="financing_contingency_days") }}
-                            {{ form.financing_contingency_days(class="form-control", id="financing_contingency_days") }}
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form.inspection_contingency.label(class="form-label") }}
-                            {% for subfield in form.inspection_contingency %}
-                            <div class="form-check">
-                                {{ subfield(class="form-check-input", id="inspection_contingency_" + subfield.data) }}
-                                {{ subfield.label(class="form-check-label", for="inspection_contingency_" +
-                                subfield.data) }}
-                            </div>
-                            {% endfor %}
-                        </div>
-
-                        <div id="inspectionContingencyFields" style="display: none;">
                             <div class="mb-4">
-                                {{ form.inspection_contingency_days.label(class="form-label",
-                                for="inspection_contingency_days") }}
-                                {{ form.inspection_contingency_days(class="form-control",
-                                id="inspection_contingency_days") }}
+                                {{ form.offer_type.label(class="form-label") }}
+                                {% for subfield in form.offer_type %}
+                                <div class="form-check">
+                                    {{ subfield(class="form-check-input", id="offer_type_" + subfield.data) }}
+                                    {{ subfield.label(class="form-check-label", for="offer_type_" + subfield.data) }}
+                                </div>
+                                {% endfor %}
                             </div>
 
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Inspection Type</th>
-                                        <th>Paid By</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for inspection in form.inspections %}
-                                    <tr>
-                                        <td>
-                                            {{ inspection.form.type(class="form-control", readonly=True,
-                                            id="inspection_type_" ~ loop.index) }}
-                                        </td>
-                                        <td>
-                                            {{ inspection.form.paid_by(class="form-select", id="inspection_paid_by_" ~
-                                            loop.index) }}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                            <div id="cashOfferFields" style="display: none;">
+                                <div class="mb-4">
+                                    {{ form.days_until_cash_available.label(class="form-label",
+                                    for="days_until_cash_available") }}
+                                    {{ form.days_until_cash_available(class="form-control",
+                                    id="days_until_cash_available")
+                                    }}
+                                </div>
+                            </div>
 
-                        <button type="submit" class="btn btn-primary w-100">Next: Payment Details</button>
-                    </form>
+                            <div id="financingFields" style="display: none;">
+                                <div class="mb-4">
+                                    {{ form.financing_type.label(class="form-label", for="financing_type") }}
+                                    {{ form.financing_type(class="form-select", id="financing_type") }}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form.max_interest_rate.label(class="form-label", for="max_interest_rate") }}
+                                    {{ form.max_interest_rate(class="form-control", id="max_interest_rate") }}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form.downpayment.label(class="form-label", for="downpayment") }}
+                                    {{ form.downpayment(class="form-control", id="downpayment", type="text",
+                                    inputmode="decimal") }}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form.amount_financed.label(class="form-label", for="amount_financed") }}
+                                    {{ form.amount_financed(class="form-control", readonly=True, id="amount_financed")
+                                    }}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form.days_to_submit_financing_app.label(class="form-label",
+                                    for="days_to_submit_financing_app") }}
+                                    {{ form.days_to_submit_financing_app(class="form-control",
+                                    id="days_to_submit_financing_app") }}
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.emd_method.label(class="form-label", for="emdMethodSelect") }}
+                                {{ form.emd_method(class="form-select", id="emdMethodSelect") }}
+                            </div>
+
+                            <div class="mb-4" id="emdOtherField" style="display: none;">
+                                {{ form.emd_other.label(class="form-label", for="emd_other") }}
+                                {{ form.emd_other(class="form-control", id="emd_other") }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.emd_value.label(class="form-label", for="emd_value") }}
+                                {{ form.emd_value(class="form-control", id="emd_value", type="text",
+                                inputmode="decimal") }}
+                                <div class="invalid-feedback" id="emd-value-error"></div>
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.emd_days.label(class="form-label", for="emd_days") }}
+                                {{ form.emd_days(class="form-control", id="emd_days") }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.appraisal_contingency.label(class="form-label") }}
+                                {% for subfield in form.appraisal_contingency %}
+                                <div class="form-check">
+                                    {{ subfield(class="form-check-input", id="appraisal_contingency_" + subfield.data)
+                                    }}
+                                    {{ subfield.label(class="form-check-label", for="appraisal_contingency_" +
+                                    subfield.data) }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-4" id="appraisalContingencyDays" style="display: none;">
+                                {{ form.appraisal_contingency_days.label(class="form-label",
+                                for="appraisal_contingency_days") }}
+                                {{ form.appraisal_contingency_days(class="form-control",
+                                id="appraisal_contingency_days") }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.financing_contingency.label(class="form-label") }}
+                                {% for subfield in form.financing_contingency %}
+                                <div class="form-check">
+                                    {{ subfield(class="form-check-input", id="financing_contingency_" + subfield.data)
+                                    }}
+                                    {{ subfield.label(class="form-check-label", for="financing_contingency_" +
+                                    subfield.data) }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-4" id="financingContingencyDays" style="display: none;">
+                                {{ form.financing_contingency_days.label(class="form-label",
+                                for="financing_contingency_days") }}
+                                {{ form.financing_contingency_days(class="form-control",
+                                id="financing_contingency_days") }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.inspection_contingency.label(class="form-label") }}
+                                {% for subfield in form.inspection_contingency %}
+                                <div class="form-check">
+                                    {{ subfield(class="form-check-input", id="inspection_contingency_" + subfield.data)
+                                    }}
+                                    {{ subfield.label(class="form-check-label", for="inspection_contingency_" +
+                                    subfield.data) }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <div id="inspectionContingencyFields" style="display: none;">
+                                <div class="mb-4">
+                                    {{ form.inspection_contingency_days.label(class="form-label",
+                                    for="inspection_contingency_days") }}
+                                    {{ form.inspection_contingency_days(class="form-control",
+                                    id="inspection_contingency_days") }}
+                                </div>
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Inspection Type</th>
+                                            <th>Paid By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for inspection in form.inspections %}
+                                        <tr>
+                                            <td>
+                                                {{ inspection.form.type(class="form-control", readonly=True,
+                                                id="inspection_type_" ~ loop.index) }}
+                                            </td>
+                                            <td>
+                                                {{ inspection.form.paid_by(class="form-select", id="inspection_paid_by_"
+                                                ~
+                                                loop.index) }}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Next: Payment Details</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="{{ url_for('static', filename='js/form_validation.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/address_autocomplete.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/form_validation.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/address_autocomplete.js') }}"></script>
 </body>
 
 </html>
